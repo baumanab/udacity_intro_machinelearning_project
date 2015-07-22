@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[4]:
 
 #!/usr/bin/python
 
@@ -50,7 +50,7 @@ features_list = enron_tools.get_features(data_dict)
 features_list.remove('email_address')
 
 ## other is not a well defined feature, remove
-features_list.remove('other')
+#features_list.remove('other')
 
 ##remove the data_label so that it can be re-added as the first feature element
 features_list.remove('poi')
@@ -187,12 +187,37 @@ print sep
 
 ### extract features and labels for gridsearch optimization
 
+# data extraction using k_best features list
 data = featureFormat(my_dataset, my_features_list, sort_keys = True)
+
+# data extraction using full features list, for pipe into PCA
+#data = featureFormat(my_dataset, features_list, sort_keys = True)
+
 tru, trn = targetFeatureSplit(data)
 
 ## scale extracted features
 scaler = preprocessing.MinMaxScaler()
 trn = scaler.fit_transform(trn)
+
+## Inspect dimensions of piping k_best features into PCA
+# remove label from features_list
+features_for_pca = my_features_list[1:]
+
+# extract features
+data_for_pca = featureFormat(my_dataset, features_for_pca, sort_keys = True)
+
+# scale features
+scale_pca_data = preprocessing.MinMaxScaler().fit_transform(data_for_pca)
+
+# fit and transform
+pca_transform = pca.fit_transform(scale_pca_data)
+
+# Starting features and ending components
+num_features = len(features_for_pca)
+components = pca_transform.shape[1]
+print 'Dimension Reduction Piping k_best Through PCA\n'
+print 'Explained Variance: {0}\n Original Number of Dimensions: {1}\n Final Dimensions: {2}\n'.format(perc_var,num_features,components)
+print sep
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script.
@@ -300,6 +325,12 @@ dt_pipe = Pipeline(steps=[('pca',pca),('dt',best_dtclf)])
 
 best_a_pipe = Pipeline(steps=[('pca',pca),('adaboost',best_aclf)])
 
+# including GaussianNB because it is "tuned" through feature selection
+# it will be interesting to see the result of features selected by k_best piped through PCA
+
+print 'GaussianNB\n'
+test_classifier(dt_pipe,my_dataset,my_features_list, scale_features = True, std_features= False)
+print sep2
 
 print 'best_dt_clf\n'
 test_classifier(dt_pipe,my_dataset,my_features_list, scale_features = True, std_features= False)
@@ -316,5 +347,5 @@ print sep
 ### Dump your classifier, dataset, and features_list so 
 ### anyone can run/check your results.
 
-dump_classifier_and_data(best_aclf, my_dataset, features_list)
+dump_classifier_and_data(best_aclf, my_dataset, my_features_list)
 

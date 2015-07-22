@@ -20,8 +20,8 @@ Feature Selection by k_best_features
 PCA
 
 Explained Variance: 0.95
- Original Number of Dimensions: 21
- Final Dimensions: 12
+ Original Number of Dimensions: 22
+ Final Dimensions: 13
 
 ##############################################################################################
 Evaluate Initial Classifiers using k_best features
@@ -49,8 +49,8 @@ clf = DecisionTreeClassifier(compute_importances=None, criterion='gini',
             max_depth=None, max_features=None, max_leaf_nodes=None,
             min_density=None, min_samples_leaf=1, min_samples_split=2,
             random_state=None, splitter='best')
- Accuracy:0.860465116279
- Predicted Poi in test set:1.0
+ Accuracy:0.837209302326
+ Predicted Poi in test set:2.0
  Total Persons in test set:43
  Precision:0.0
  Recall:0.0 
@@ -66,16 +66,16 @@ GaussianNB()
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AdaBoostClassifier(algorithm='SAMME', base_estimator=None, learning_rate=1.0,
           n_estimators=50, random_state=None)
-	Accuracy: 0.83627	Precision: 0.32271	Recall: 0.20750	F1: 0.25259	F2: 0.22345
-	Total predictions: 15000	True positives:  415	False positives:  871	False negatives: 1585	True negatives: 12129
+	Accuracy: 0.83620	Precision: 0.32246	Recall: 0.20750	F1: 0.25251	F2: 0.22343
+	Total predictions: 15000	True positives:  415	False positives:  872	False negatives: 1585	True negatives: 12128
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 DecisionTreeClassifier(compute_importances=None, criterion='gini',
             max_depth=None, max_features=None, max_leaf_nodes=None,
             min_density=None, min_samples_leaf=1, min_samples_split=2,
             random_state=None, splitter='best')
-	Accuracy: 0.79927	Precision: 0.24064	Recall: 0.23450	F1: 0.23753	F2: 0.23570
-	Total predictions: 15000	True positives:  469	False positives: 1480	False negatives: 1531	True negatives: 11520
+	Accuracy: 0.80087	Precision: 0.24283	Recall: 0.23300	F1: 0.23782	F2: 0.23490
+	Total predictions: 15000	True positives:  466	False positives: 1453	False negatives: 1534	True negatives: 11547
 
 ##############################################################################################
 Evaluate Initial Classifiers using PCA
@@ -83,26 +83,15 @@ Evaluate Initial Classifiers using PCA
 Local Evaluator
 
 clf = Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('gaussian', GaussianNB())])
- Accuracy:0.837209302326
- Predicted Poi in test set:4.0
+ Accuracy:0.860465116279
+ Predicted Poi in test set:3.0
  Total Persons in test set:43
- Precision:0.25
+ Precision:0.333333333333
  Recall:0.2 
- F1 Score: 0.222222222222 
+ F1 Score: 0.25 
 
 clf = Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME', base_estimator=None, learning_rate=1.0,
           n_estimators=50, random_state=None))])
- Accuracy:0.813953488372
- Predicted Poi in test set:5.0
- Total Persons in test set:43
- Precision:0.2
- Recall:0.2 
- F1 Score: 0.2 
-
-clf = Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('decision_tree', DecisionTreeClassifier(compute_importances=None, criterion='gini',
-            max_depth=None, max_features=None, max_leaf_nodes=None,
-            min_density=None, min_samples_leaf=1, min_samples_split=2,
-            random_state=None, splitter='best'))])
  Accuracy:0.767441860465
  Predicted Poi in test set:7.0
  Total Persons in test set:43
@@ -110,26 +99,44 @@ clf = Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), 
  Recall:0.2 
  F1 Score: 0.166666666667 
 
+clf = Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('decision_tree', DecisionTreeClassifier(compute_importances=None, criterion='gini',
+            max_depth=None, max_features=None, max_leaf_nodes=None,
+            min_density=None, min_samples_leaf=1, min_samples_split=2,
+            random_state=None, splitter='best'))])
+ Accuracy:0.744186046512
+ Predicted Poi in test set:10.0
+ Total Persons in test set:43
+ Precision:0.2
+ Recall:0.4 
+ F1 Score: 0.266666666667 
+
 ##############################################################################################
 tester.py evaluator
 
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('gaussian', GaussianNB())])
-	Accuracy: 0.82240	Precision: 0.33677	Recall: 0.34250	F1: 0.33961	F2: 0.34134
-	Total predictions: 15000	True positives:  685	False positives: 1349	False negatives: 1315	True negatives: 11651
+	Accuracy: 0.82573	Precision: 0.35039	Recall: 0.35950	F1: 0.35489	F2: 0.35764
+	Total predictions: 15000	True positives:  719	False positives: 1333	False negatives: 1281	True negatives: 11667
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME', base_estimator=None, learning_rate=1.0,
           n_estimators=50, random_state=None))])
-	Accuracy: 0.84440	Precision: 0.37154	Recall: 0.24150	F1: 0.29273	F2: 0.25968
-	Total predictions: 15000	True positives:  483	False positives:  817	False negatives: 1517	True negatives: 12183
+	Accuracy: 0.84780	Precision: 0.38919	Recall: 0.24850	F1: 0.30333	F2: 0.26787
+	Total predictions: 15000	True positives:  497	False positives:  780	False negatives: 1503	True negatives: 12220
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('decision_tree', DecisionTreeClassifier(compute_importances=None, criterion='gini',
             max_depth=None, max_features=None, max_leaf_nodes=None,
             min_density=None, min_samples_leaf=1, min_samples_split=2,
             random_state=None, splitter='best'))])
-	Accuracy: 0.80387	Precision: 0.27762	Recall: 0.29400	F1: 0.28558	F2: 0.29057
-	Total predictions: 15000	True positives:  588	False positives: 1530	False negatives: 1412	True negatives: 11470
+	Accuracy: 0.81187	Precision: 0.29305	Recall: 0.29100	F1: 0.29202	F2: 0.29141
+	Total predictions: 15000	True positives:  582	False positives: 1404	False negatives: 1418	True negatives: 11596
+
+##############################################################################################
+Dimension Reduction Piping k_best Through PCA
+
+Explained Variance: 0.95
+ Original Number of Dimensions: 10
+ Final Dimensions: 6
 
 ##############################################################################################
 Tune Classifiers
@@ -139,7 +146,7 @@ Decision tree tuning
             max_depth=None, max_features=None, max_leaf_nodes=None,
             min_density=None, min_samples_leaf=1, min_samples_split=2,
             random_state=None, splitter='best'))]
-, Best Parameters: {'dec_tree__max_depth': 16, 'dec_tree__criterion': 'entropy', 'dec_tree__min_samples_leaf': 2, 'reduce_dim__n_components': 0.95, 'dec_tree__min_samples_split': 8}
+, Best Parameters: {'dec_tree__max_depth': 16, 'dec_tree__criterion': 'entropy', 'dec_tree__min_samples_leaf': 1, 'reduce_dim__n_components': 0.95, 'dec_tree__min_samples_split': 4}
  
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Adaboost tuning
@@ -155,35 +162,45 @@ Adaboost with Tuned Decision Tree, tuning
             min_density=None, min_samples_leaf=1, min_samples_split=8,
             random_state=None, splitter='best'),
           learning_rate=1.0, n_estimators=50, random_state=None))]
-, Best Parameters: {'reduce_dim__n_components': 0.95, 'adaboost__algorithm': 'SAMME', 'adaboost__n_estimators': 150, 'adaboost__learning_rate': 0.1}
+, Best Parameters: {'reduce_dim__n_components': 0.95, 'adaboost__algorithm': 'SAMME', 'adaboost__n_estimators': 10, 'adaboost__learning_rate': 1}
  
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Evaluate Tuned Classifiers
 
+GaussianNB
+
+Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('dt', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('dec_tree', DecisionTreeClassifier(compute_importances=None, criterion='entropy',
+            max_depth=16, max_features=None, max_leaf_nodes=None,
+            min_density=None, min_samples_leaf=1, min_samples_split=4,
+            random_state=None, splitter='best'))]))])
+	Accuracy: 0.82873	Precision: 0.34221	Recall: 0.30850	F1: 0.32448	F2: 0.31470
+	Total predictions: 15000	True positives:  617	False positives: 1186	False negatives: 1383	True negatives: 11814
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 best_dt_clf
 
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('dt', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('dec_tree', DecisionTreeClassifier(compute_importances=None, criterion='entropy',
             max_depth=16, max_features=None, max_leaf_nodes=None,
-            min_density=None, min_samples_leaf=2, min_samples_split=8,
+            min_density=None, min_samples_leaf=1, min_samples_split=4,
             random_state=None, splitter='best'))]))])
-	Accuracy: 0.85007	Precision: 0.41793	Recall: 0.31700	F1: 0.36053	F2: 0.33309
-	Total predictions: 15000	True positives:  634	False positives:  883	False negatives: 1366	True negatives: 12117
+	Accuracy: 0.83160	Precision: 0.35373	Recall: 0.31800	F1: 0.33491	F2: 0.32456
+	Total predictions: 15000	True positives:  636	False positives: 1162	False negatives: 1364	True negatives: 11838
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 best_a_clf
 
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=2,
           n_estimators=5, random_state=None))]))])
-	Accuracy: 0.89967	Precision: 0.73066	Recall: 0.39200	F1: 0.51025	F2: 0.43205
-	Total predictions: 15000	True positives:  784	False positives:  289	False negatives: 1216	True negatives: 12711
+	Accuracy: 0.89960	Precision: 0.72998	Recall: 0.39200	F1: 0.51008	F2: 0.43200
+	Total predictions: 15000	True positives:  784	False positives:  290	False negatives: 1216	True negatives: 12710
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 best_adt_clf
 
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost_dt', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME',
-          base_estimator=DecisionTreeClassifier(compute_importances=None, criterion='en...state=None, splitter='best'),
-          learning_rate=0.1, n_estimators=150, random_state=None))]))])
-	Accuracy: 0.84487	Precision: 0.39136	Recall: 0.29450	F1: 0.33609	F2: 0.30984
-	Total predictions: 15000	True positives:  589	False positives:  916	False negatives: 1411	True negatives: 12084
+          base_estimator=DecisionTreeClassifier(compute_importances=None, criterion='en...om_state=None, splitter='best'),
+          learning_rate=1, n_estimators=10, random_state=None))]))])
+	Accuracy: 0.84613	Precision: 0.37480	Recall: 0.23050	F1: 0.28545	F2: 0.24973
+	Total predictions: 15000	True positives:  461	False positives:  769	False negatives: 1539	True negatives: 12231
 
 ##############################################################################################
