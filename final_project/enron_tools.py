@@ -118,7 +118,7 @@ def get_features(dictionary):
     feature_keys = dictionary['SKILLING JEFFREY K'].keys()
     return list(feature_keys)
 
-
+'''
 def get_k_best(dictionary, features_list, k):
     """ runs scikit-learn's SelectKBest feature selection returning:
     {feature:score}
@@ -134,7 +134,7 @@ def get_k_best(dictionary, features_list, k):
     k_best_features = dict(sorted_pairs[:k])
     print "{0} best features: {1}\n".format(k, k_best_features.keys())
     return k_best_features
-
+'''
 
 def get_nan_counts(dictionary):
     '''
@@ -177,11 +177,21 @@ def get_k_best(dictionary, features_list, k):
     #eliminate infinite values
     k_best_features = k_best_features[np.isinf(k_best_features.score)==False]
     print 'Feature Selection by k_best_features\n'
-    print "{0} best features in descending order: {1}\n".format(k, k_best_features.feature.values[:10])
+    print "{0} best features in descending order: {1}\n".format(k, k_best_features.feature.values[:k])
     print '{0}\n'.format(k_best_features[:k])
     
     
     return k_best_features[:k]
+
+
+def extract_data():
+    '''
+    
+    
+    '''
+    
+    
+    return
 
 
 

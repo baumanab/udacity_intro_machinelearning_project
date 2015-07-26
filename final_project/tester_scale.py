@@ -25,13 +25,21 @@ PERF_FORMAT_STRING = "\
 Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{display_precision}f}"
 RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\tFalse negatives: {:4d}\tTrue negatives: {:4d}"
 
-def test_classifier(clf, dataset, feature_list, folds = 1000):
+def test_classifier(clf, dataset, feature_list, folds = 1000,scale_features = True, std_features = False):
     data = featureFormat(dataset, feature_list, sort_keys = True)
 
     
     labels, features = targetFeatureSplit(data)
 
-    
+    #scale features if necessary
+    if scale_features == True:
+        scaler = preprocessing.MinMaxScaler()
+        features = scaler.fit_transform(features)
+
+    #standardize features for pca if necessary
+    if std_features == True:
+        std = preprocessing.StandardScaler()
+        features = preprocessing.StandardScaler().fit_transform(features)
 
 
     cv = StratifiedShuffleSplit(labels, folds, random_state = 42)
