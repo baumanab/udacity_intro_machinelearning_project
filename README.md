@@ -20,12 +20,10 @@ For the final project we applied machine learning tools (sklearn) to a treasure 
 - [my_classfier.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_classifier.pkl)
 - [my_dataset.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_dataset.pkl)
 - [my_feature_list.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_feature_list.pkl)
-- - various .ipynb files: ipython notebooks of my much of my work and interactive testing
- - []()
- - []()
- - []()
- - []()
- - []()
+- ipython notebooks of my much of my work and interactive testing
+ - [Sandbox](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/intro_machine_learning_final_sandbox.ipynb)
+ - [Comprehensive code for final](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/intro_machine_learning_final.ipynb)
+ - [Condensed Code for final](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/intro_machine_learning_final_alg.ipynb)
 
 ### Enron Submission Free-Response Questions ###
 
