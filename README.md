@@ -68,7 +68,7 @@ My approach to features was first to engineer features and eliminate problematic
 ### Table1.  10 Best Features with Score and Percent Missing (NaN) Data ###
 
 | Feature |	Score |	Percent_nan |
------------------------------------------
+|:---------:|:-------:|:-------------:|
 | exercised_stock_options |	24.8 |	29.9 |
 | total_stock_value |	24.18 |	13.2 |
 | bonus |	20.79 |	43.8 |
