@@ -1,28 +1,33 @@
-Detecting Persons of Interest in the Enron Fraud Case
+Detecting Persons of Interest in the Enron Fraud Case with Machine Learning
 ===============================================================================================
 
-For the final project we applied machine learning tools to a treasure trove of real email and financial data from Enron, looking for signs of fraud.
+For the final project we applied machine learning tools (sklearn) to a treasure trove of real email and financial data from Enron, looking for signs of fraud.
 
-## Files ##
+### Files ###
 
- Note to reviewers.  Piping the output of poi_id.py to a text file will give a human readable output.  Also, I modified tester.py to scale features with a min/max scaler.
+ Note to reviewers:  Piping the output of poi_id.py to a text file will give a human readable output.  Also, I modified tester.py to scale features with a min/max scaler.
 
-- UD120_ShortQuestions.pdf: This document
-- my_poi_id.py: most relevant work for this project, produces best_aclf_pipe.pkl
-- poi_id.py: final classifier code for simplified review
-- poi_id_results.txt: pipe of poi_id.py output to text file
-- my_poi_id_results.txt: pipe of my_poi_id.py output to text file
-- various .ipynb files: ipython notebooks of my much of my work and interactive testing
-- tester.py: your evaluator/validator code modified to import sklearn.preprocessiing
-- tester.scale.py: your evaluator/validator code modified for feature scaling
-- enron_tools.py: helper functions
-- enron_evaluate.py: evaluation function and scoring function
-- best_aclf_pipe.pkl: intermediate tuned adaboost classifier for poi_id.py
-- my_classfier.pkl
-- my_dataset.pkl
-- my_feature_list.pkl
+- [Final Project Folder](https://github.com/baumanab/udacity_intro_machinelearning_project/tree/master/final_project)
+- [my_poi_id.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_poi_id.py): most relevant work for this project, produces best_aclf_pipe.pkl
+- [poi_id.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/poi_id.py): final classifier code for simplified review
+- [poi_id_results.txt](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_poi_id_results.txt): pipe of poi_id.py output to text file
+- [my_poi_id_results.txt](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_poi_id_results.txt): pipe of my_poi_id.py output to text file
+- [tester.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/tester.py): your evaluator/validator code modified to import sklearn.preprocessiing
+- [tester.scale.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/tester_scale.py): your evaluator/validator code modified for feature scaling
+- [enron_tools.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/enron_tools.py): helper functions
+- [enron_evaluate.py](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/enron_evaluate.py): evaluation function and scoring function
+- [best_aclf_pipe.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/best_clf_pipe.pkl): intermediate tuned adaboost classifier for poi_id.py
+- [my_classfier.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_classifier.pkl)
+- [my_dataset.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_dataset.pkl)
+- [my_feature_list.pkl](https://github.com/baumanab/udacity_intro_machinelearning_project/blob/master/final_project/my_feature_list.pkl)
+- - various .ipynb files: ipython notebooks of my much of my work and interactive testing
+ - []()
+ - []()
+ - []()
+ - []()
+ - []()
 
-## Enron Submission Free-Response Questions ##
+### Enron Submission Free-Response Questions ###
 
 1.	Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it.  As part of your answer, give some background on the dataset and how it can be used to answer the project question.  Were there any outliers in the data when you got it, and how did you handle those?  [relevant rubric items: “data exploration”, “outlier investigation”]
 
@@ -30,7 +35,7 @@ The goal of this project is to leverage machine learning methods along with fina
 
 The Enron data set is comprised of email and financial data (E + F data set) collected and released as part of the US federal investigation into financial fraud.  POI labels were hand curated (this is an artisan feature!) via information regarding arrests, immunity deals, prosecution, and conviction.  It is important to note that only those names contained in both the financial and email data set were passed to the final data set (inner join).  So while the email data set contains 35 POIs, the final data set contains 18 labeled POIs.  Without both financial and email features, it would be difficult to build an accurate and robust model.
 
-The data set is comprised of:
+**The data set is comprised of:**
 
 - 146 points, each theoretically  representing a person(2 are not people, soylent green is people )
 - 18 of these points is labeled as a POI and 128 as non-POI
@@ -50,12 +55,13 @@ The data set is comprised of:
 ```
 - POI label: [‘poi’] (boolean, represented as integers)
 
+#### Outliers ####
+
 Exploratory data analysis (scatter plot of scaled bonus vs. salary) revealed five outliers, one of which was eliminated from the data set.  
 
-Outliers:
-•	TOTAL:  Extreme outlier for numerical features, consisting of spreadsheet summary artifact
-•	Four high rollers, including Lay and Skilling:  While their values are extreme, these are legitimate values of actual POIs, so they were not eliminated.
-•	One other data point was eliminated (THE TRAVEL AGENCY IN THE PARK) because it does not represent a person, and therefore can’t be a POI, leaving 144 data points.
+-	TOTAL:  Extreme outlier for numerical features, consisting of spreadsheet summary artifact
+-	Four high rollers, including Lay and Skilling:  While their values are extreme, these are legitimate values of actual POIs, so they were not eliminated.
+-	One other data point was eliminated (THE TRAVEL AGENCY IN THE PARK) because it does not represent a person, and therefore can’t be a POI, leaving 144 data points.
 
 While there is missing data, caution was observed in making any changes that might bias the models, therefore no effort was made to fill or impute values.
 
@@ -65,7 +71,7 @@ While there is missing data, caution was observed in making any changes that mig
 My approach to features was first to engineer features and eliminate problematic features.  I engineered 3 features which focused on rate of interaction with known POIs: (1) poi_ratio: ratio of the total poi interaction (to, from, and shared emails) to the total emails sent (2) to_poi_ratio: ratio of total emails to a POI to total emails (3) from_poi_ratio: ratio of total emails from a POI to total emails.  The rationale for addition of these features is that persons whom interacted with POI’s at higher rate (total interaction or to/from) may be colluding with those POIs to commit fraud and therefore be POIs themselves. Following this I removed the email address feature because it was not useful and created exceptions.  Features were scaled with a min-max scaler prior to passing into select_k_best or PCA, to effect even weighting of features.  This is essential to perform before either of these functions, considering the overall dynamic range of values (several orders of magnitude) and inherent differences in their units (i.e. dollars vs. fraction or number of emails).  Either univariate feature selection (select K best), PCA or both were applied to the scaled features.  I did not explicitly test my engineered features, but relied on select_k_best to pick the k most influential features. poi_ratio was scored as the 6th most influential feature.   PCA revealed that 13 components accounted for 95% of the variance. 
 
 
-### Table1.  10 Best Features with Score and Percent Missing (NaN) Data ###
+#### Table1.  10 Best Features with Score and Percent Missing (NaN) Data ####
 
 | Feature |	Score |	Percent_nan |
 |:---------:|:-------:|:-------------:|
@@ -142,17 +148,17 @@ Recall, precision, and F1 score were all used as evaluation metrics.  Accuracy w
 
 The best performing adaboost classifier yielded the following metrics when passed through tester_scale.py (min/max scaling before PCA as part of tester):
 
-Precision: 0.73066	Recall: 0.39200	F1: 0.51025
+**Precision:** 0.73066	Recall: 0.39200	F1: 0.51025
 
 When passed through tester.py (min/max scaling as part of pipeline, before PCA) the metrics were slightly lower:
 
-Precision: 0.67914	Recall: 0.36300	F1: 0.47312
+**Precision:** 0.67914	Recall: 0.36300	F1: 0.47312
 
 I have yet to find the cause of the discrepancy.
 
 This model has higher precision and lower recall, with a mid-range F1 score (stands to reason considering the precision and recall).  That means I tend to penalize false positives at a higher rate than false negatives.  So while I am confident that the persons flagged as POIs by this model are likely to be an actual POI, some real POIs are going to slip through.  I’m casting a narrow net.  The argument could be made that casing a wider net (higher recall which can result in more false positives) is better because it may give investigators a larger suspect pool which to investigate.  I would argue the opposite is true.  Without even considering the human element (being investigated for a crime in which you are innocent is not likely pleasant), law enforcement agencies have limited resources.  From a resource perspective it would be best to confidently flag a solid pool of POIs.  Those POIs could then be vigorously investigated, likely leading to others who are colluding with them.  That would be a more efficient and ethical use of this tool.
 
-## References (random order): ##
+### References (random order): ###
 
 -	bryantravissmith.com/udacity/udacity-project-4/
 
