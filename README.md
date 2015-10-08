@@ -61,18 +61,19 @@ My approach to features was first to engineer features and eliminate problematic
 
 
 ### Table1.  10 Best Features with Score and Percent Missing (NaN) Data ###
+
 | Feature |	Score |	Percent_nan |
 -----------------------------------------
-exercised_stock_options |	24.8 |	29.9 |
-total_stock_value |	24.18 |	13.2 |
-bonus |	20.79 |	43.8 |
-salary |	18.29 |	34.7 |
-deferred_income |	11.46 |	66.7 |
-poi_ratio |	10.02 |	40.3 |
-long_term_incentive |	9.92 |	54.9 |
-restricted_stock |	9.21 |	24.3 |
-total_payments |	8.77 |	14.6 |
-shared_receipt_with_poi |	8.59 |	40.3 |
+| exercised_stock_options |	24.8 |	29.9 |
+| total_stock_value |	24.18 |	13.2 |
+| bonus |	20.79 |	43.8 |
+| salary |	18.29 |	34.7 |
+| deferred_income |	11.46 |	66.7 |
+| poi_ratio |	10.02 |	40.3 |
+| long_term_incentive |	9.92 |	54.9 |
+| restricted_stock |	9.21 |	24.3 |
+| total_payments |	8.77 |	14.6 |
+| shared_receipt_with_poi |	8.59 |	40.3 |
 
 For exploration and tuning I tried a variety of feature numbers (k) and PCA components as well as a combination of univariate feature selection and PCA components.  I tried the 5,6,8,9,10,11,12,and 15 best features; the PCA n_components = .98, .95, or .90, and the 5,6,8,9,10,11,12, and 15 best features piped through PCA with n_components = .98, .95, or .90.   The value of k was changed manually but n_components was made part of GridSearchCV (change k, run search, evaluate, repeat).  The 10 best features combined with PCA(n_components = .95) was consistently the top performing combination in terms of precision and recall.   This combination accounted for 95% of the variance in 6 components.  While I had originally decided to try PCA just to try it out and learn now to code up PCA, it ultimately became a critical part of my classifier.
 
