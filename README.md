@@ -161,9 +161,9 @@ This model has higher precision and lower recall, with a mid-range F1 score (sta
 
 -	http://scikit-learn.org/stable/auto_examples/plot_digits_pipe.html+&cd=1&hl=en&ct=clnk&gl=us
 
--		http://scikit-learn.org/stable/modules/grid_search.html
+-	http://scikit-learn.org/stable/modules/grid_search.html
 
--		http://scikit-learn.org/stable/modules/pipeline.html#pipeline
+-	http://scikit-learn.org/stable/modules/pipeline.html#pipeline
 
 -	http://sebastianraschka.com/Articles/2014_ensemble_classifier.html#Appendix-III---GridSearch-Support
 
@@ -183,5 +183,5 @@ This model has higher precision and lower recall, with a mid-range F1 score (sta
 
 -	http://orenov.github.io/mlproject.html
 
--		http://en.wikipedia.org/wiki/Precision_and_recall
+-	http://en.wikipedia.org/wiki/Precision_and_recall
 
