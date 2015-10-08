@@ -1,24 +1,49 @@
-Notes to reviewer:
+Detecting Persons of Interest in the Enron Fraud Case
+===============================================================================================
 
-•	regarding exception:  please refer to discussion. udacity.com/t/scoring-gridsearchcv/26354.
-•	tester.py:  modified to import sklearn.preprocessing, this was the only way I could get a pipeline with a scaler to work.  If you know of a way to do this without modifying tester.py, please enlighten me.
+For the final project we applied machine learning tools to a treasure trove of real email and financial data from Enron, looking for signs of fraud.
 
+## Files ##
 
+ Note to reviewers.  Piping the output of poi_id.py to a text file will give a human readable output.  Also, I modified tester.py to scale features with a min/max scaler.
 
-Enron Submission Free-Response Questions
+- UD120_ShortQuestions.pdf: This document
+- my_poi_id.py: most relevant work for this project, produces best_aclf_pipe.pkl
+- poi_id.py: final classifier code for simplified review
+- poi_id_results.txt: pipe of poi_id.py output to text file
+- my_poi_id_results.txt: pipe of my_poi_id.py output to text file
+- various .ipynb files: ipython notebooks of my much of my work and interactive testing
+- tester.py: your evaluator/validator code modified to import sklearn.preprocessiing
+- tester.scale.py: your evaluator/validator code modified for feature scaling
+- enron_tools.py: helper functions
+- enron_evaluate.py: evaluation function and scoring function
+- best_aclf_pipe.pkl: intermediate tuned adaboost classifier for poi_id.py
+- my_classfier.pkl
+- my_dataset.pkl
+- my_feature_list.pkl
+
+## Enron Submission Free-Response Questions ##
 
 1.	Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it.  As part of your answer, give some background on the dataset and how it can be used to answer the project question.  Were there any outliers in the data when you got it, and how did you handle those?  [relevant rubric items: “data exploration”, “outlier investigation”]
 
 The goal of this project is to leverage machine learning methods along with financial and email data from Enron to construct a predictive model for identifying potential parties of financial fraud.  These parties are termed “persons of interest,” but kids these days just say POIs.
 
 The Enron data set is comprised of email and financial data (E + F data set) collected and released as part of the US federal investigation into financial fraud.  POI labels were hand curated (this is an artisan feature!) via information regarding arrests, immunity deals, prosecution, and conviction.  It is important to note that only those names contained in both the financial and email data set were passed to the final data set (inner join).  So while the email data set contains 35 POIs, the final data set contains 18 labeled POIs.  Without both financial and email features, it would be difficult to build an accurate and robust model.
+
 The data set is comprised of:
-•	146 points, each theoretically  representing a person(2 are not people, soylent green is people )
-•	18 of these points is labeled as a POI and 128 as non-POI
-•	Each point/person is associated with 21 features (14 financial, 6 email, 1 labeled)
-•	financial features: ['salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees'] (Units = USD) 
-•	email features: ['to_messages', 'email_address', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'poi', 'shared_receipt_with_poi'] (units = number of emails messages; except ‘email_address’, which is a text string) 
-•	POI label: [‘poi’] (boolean, represented as integers)
+
+- 146 points, each theoretically  representing a person(2 are not people, soylent green is people )
+- 18 of these points is labeled as a POI and 128 as non-POI
+- Each point/person is associated with 21 features (14 financial, 6 email, 1 labeled)
+- financial features: 
+```
+['salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees'] (Units = USD) 
+```
+- email features: 
+```
+['to_messages', 'email_address', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'poi', 'shared_receipt_with_poi'] # units = number of emails messages; except ‘email_address’, which is a text string
+```
+- POI label: [‘poi’] (boolean, represented as integers)
 
 Exploratory data analysis (scatter plot of scaled bonus vs. salary) revealed five outliers, one of which was eliminated from the data set.  
 
@@ -35,18 +60,19 @@ While there is missing data, caution was observed in making any changes that mig
 My approach to features was first to engineer features and eliminate problematic features.  I engineered 3 features which focused on rate of interaction with known POIs: (1) poi_ratio: ratio of the total poi interaction (to, from, and shared emails) to the total emails sent (2) to_poi_ratio: ratio of total emails to a POI to total emails (3) from_poi_ratio: ratio of total emails from a POI to total emails.  The rationale for addition of these features is that persons whom interacted with POI’s at higher rate (total interaction or to/from) may be colluding with those POIs to commit fraud and therefore be POIs themselves. Following this I removed the email address feature because it was not useful and created exceptions.  Features were scaled with a min-max scaler prior to passing into select_k_best or PCA, to effect even weighting of features.  This is essential to perform before either of these functions, considering the overall dynamic range of values (several orders of magnitude) and inherent differences in their units (i.e. dollars vs. fraction or number of emails).  Either univariate feature selection (select K best), PCA or both were applied to the scaled features.  I did not explicitly test my engineered features, but relied on select_k_best to pick the k most influential features. poi_ratio was scored as the 6th most influential feature.   PCA revealed that 13 components accounted for 95% of the variance. 
 
 
-Table1.  10 Best Features with Score and Percent Missing (NaN) Data
-Feature	Score	Percent_nan
-exercised_stock_options	24.8	29.9
-total_stock_value	24.18	13.2
-bonus	20.79	43.8
-salary	18.29	34.7
-deferred_income	11.46	66.7
-poi_ratio	10.02	40.3
-long_term_incentive	9.92	54.9
-restricted_stock	9.21	24.3
-total_payments	8.77	14.6
-shared_receipt_with_poi	8.59	40.3
+### Table1.  10 Best Features with Score and Percent Missing (NaN) Data ###
+| Feature |	Score |	Percent_nan |
+-----------------------------------------
+exercised_stock_options |	24.8 |	29.9 |
+total_stock_value |	24.18 |	13.2 |
+bonus |	20.79 |	43.8 |
+salary |	18.29 |	34.7 |
+deferred_income |	11.46 |	66.7 |
+poi_ratio |	10.02 |	40.3 |
+long_term_incentive |	9.92 |	54.9 |
+restricted_stock |	9.21 |	24.3 |
+total_payments |	8.77 |	14.6 |
+shared_receipt_with_poi |	8.59 |	40.3 |
 
 For exploration and tuning I tried a variety of feature numbers (k) and PCA components as well as a combination of univariate feature selection and PCA components.  I tried the 5,6,8,9,10,11,12,and 15 best features; the PCA n_components = .98, .95, or .90, and the 5,6,8,9,10,11,12, and 15 best features piped through PCA with n_components = .98, .95, or .90.   The value of k was changed manually but n_components was made part of GridSearchCV (change k, run search, evaluate, repeat).  The 10 best features combined with PCA(n_components = .95) was consistently the top performing combination in terms of precision and recall.   This combination accounted for 95% of the variance in 6 components.  While I had originally decided to try PCA just to try it out and learn now to code up PCA, it ultimately became a critical part of my classifier.
 
@@ -64,6 +90,8 @@ GaussianNB does not have parameters to tune.  The only “tuning” that can be 
 
 Realizing that adaboost was my front runner I continued to try PCA and k settings as mentioned above as well as a RandomForestClassifier as the base estimator.  Eventually it was clear that a combination of the 10 best features and PCA(n_components = .95) were my best transformer settings, and that the DecisonTreeBaseEstimator was outperforming the RandomForestClassifier as a base estimator.  At this point, I focused on tuning adaboost with GridSearchCV, using the following parameters:
 
+```python
+
 {'adaboost__algorithm': ('SAMME', 'SAMME.R'),
  'adaboost__base_estimator': [DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
               max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
@@ -72,17 +100,22 @@ Realizing that adaboost was my front runner I continued to try PCA and k setting
  'adaboost__learning_rate': [0.1, 0.5, 1, 1.5, 2, 2.5],
  'adaboost__n_estimators': [5, 10, 30, 40, 50, 100, 150, 200],
  'reduce_dim__n_components': [0.95]}
+ ```
 
 My final classifier consisted of this pipeline for local testing, where a tester.py modified for min/max feauture scaling was used for testing (tester_scale.py):
 
+```python
+
 Pipeline(steps=[('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=2,
           n_estimators=5, random_state=None))]))])
+```
 
 and a pipeline for tester.py (modified only to import sklearn.preprocessing):
 
+```python
 Pipeline(steps=[('scale_features', MinMaxScaler(copy=True, feature_range=(0, 1))), ('pca', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', Pipeline(steps=[('reduce_dim', PCA(copy=True, n_components=0.95, whiten=False)), ('adaboost', AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=2,
           n_estimators=5, random_state=None))]))])
-
+```
 
 
 5.	What is validation, and what’s a classic mistake you can make if you do it wrong?  How did you validate your analysis?  [relevant rubric item: “validation strategy”]
@@ -109,55 +142,33 @@ I have yet to find the cause of the discrepancy.
 
 This model has higher precision and lower recall, with a mid-range F1 score (stands to reason considering the precision and recall).  That means I tend to penalize false positives at a higher rate than false negatives.  So while I am confident that the persons flagged as POIs by this model are likely to be an actual POI, some real POIs are going to slip through.  I’m casting a narrow net.  The argument could be made that casing a wider net (higher recall which can result in more false positives) is better because it may give investigators a larger suspect pool which to investigate.  I would argue the opposite is true.  Without even considering the human element (being investigated for a crime in which you are innocent is not likely pleasant), law enforcement agencies have limited resources.  From a resource perspective it would be best to confidently flag a solid pool of POIs.  Those POIs could then be vigorously investigated, likely leading to others who are colluding with them.  That would be a more efficient and ethical use of this tool.
 
-References (random order):
+## References (random order): ##
 
-•	bryantravissmith.com/udacity/udacity-project-4/
+-	bryantravissmith.com/udacity/udacity-project-4/
 
-•	scikit-learn.org/stable/auto_examples/plot_digits_pipe.html+&cd=1&hl=en&ct=clnk&gl=us
+-	scikit-learn.org/stable/auto_examples/plot_digits_pipe.html+&cd=1&hl=en&ct=clnk&gl=us
 
-•	scikit-learn.org/stable/modules/grid_search.html
+-	scikit-learn.org/stable/modules/grid_search.html
 
-•	scikit-learn.org/stable/modules/pipeline.html#pipeline
+-	scikit-learn.org/stable/modules/pipeline.html#pipeline
 
-•	http://sebastianraschka.com/Articles/2014_ensemble_classifier.html#Appendix-III---GridSearch-Support
+-	http://sebastianraschka.com/Articles/2014_ensemble_classifier.html#Appendix-III---GridSearch-Support
 
-•	http://napitupulu-jon.appspot.com/posts/evaluation-ud120.html
+-	http://napitupulu-jon.appspot.com/posts/evaluation-ud120.html
 
-•	https://www.udacity.com/course/viewer#!/c-ud120
+-	https://www.udacity.com/course/viewer#!/c-ud120
 
-•	https://github.com/sebasibarguen/udacity-nanodegree-machinelearning#investigating-enrons-scandal-using-machine-learning
+-	https://github.com/sebasibarguen/udacity-nanodegree-machinelearning#investigating-enrons-scandal-using-machine-learning
 
-•	https://github.com/allanbreyes/udacity-data-science/tree/master/p4
+-	https://github.com/allanbreyes/udacity-data-science/tree/master/p4
 
-•	http://scikit-learn.org/stable/model_selection.html#model-selection
+-	http://scikit-learn.org/stable/model_selection.html#model-selection
 
-•	http://scikit-learn.org/stable/index.html
+-	http://scikit-learn.org/stable/index.html
 
-•	http://www.amazon.com/Scikit-Learn-Cookbook-Trent-Hauck/dp/1783989483
+-	http://www.amazon.com/Scikit-Learn-Cookbook-Trent-Hauck/dp/1783989483
 
-•	http://orenov.github.io/mlproject.html
+-	http://orenov.github.io/mlproject.html
 
-•	en.wikipedia.org/wiki/Precision_and_recall
+-	en.wikipedia.org/wiki/Precision_and_recall
 
-
-
-
-
-
-Files: 
- Note to reviewers.  Piping the output of poi_id.py to a text file will give a human readable output.  Also, I modified tester.py to scale features with a min/max scaler.
-
-•	UD120_ShortQuestions.pdf: This document
-•	my_poi_id.py: most relevant work for this project, produces best_aclf_pipe.pkl
-•	poi_id.py: final classifier code for simplified review
-•	poi_id_results.txt: pipe of poi_id.py output to text file
-•	my_poi_id_results.txt: pipe of my_poi_id.py output to text file
-•	various .ipynb files: ipython notebooks of my much of my work and interactive testing
-•	tester.py: your evaluator/validator code modified to import sklearn.preprocessiing
-•	tester.scale.py: your evaluator/validator code modified for feature scaling
-•	enron_tools.py: helper functions
-•	enron_evaluate.py: evaluation function and scoring function
-•	best_aclf_pipe.pkl: intermediate tuned adaboost classifier for poi_id.py
-•	my_classfier.pkl
-•	my_dataset.pkl
-•	my_feature_list.pkl
